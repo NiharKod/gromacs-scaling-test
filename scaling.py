@@ -16,7 +16,31 @@ os.makedirs(new_directory_path, exist_ok=True)
 
 print(f"Directory '{new_directory_path}' created successfully.")
 
+
+# Copy any necessary input files into new location
+
 os.system('cp ' + directory + "/*.pdb  " + new_directory_path)
+print("Copied any pdb files")
+
+os.system('cp ' + directory + "/*.gro  " + new_directory_path)
+
+print("Copied any gro files")
+
+os.system('cp ' + directory + "/*.gro96  " + new_directory_path)
+
+print("Copied any gro files")
+
+os.system('cp ' + directory + "/*.top  " + new_directory_path)
+
+print("Copied any top files")
+
+os.system('cp ' + directory + "/*.itp  " + new_directory_path)
+
+print("Copied any itp files")
+
+os.system('cp ' + directory + "/*.tpr  " + new_directory_path)
+
+print("Copied any tpr files")
 
 # loop through all files and change number of steps to 100
 
