@@ -70,33 +70,10 @@ for file_path in mdp_files:
 
 os.chdir(new_directory_path)
 
-
-
 # Start batchscripts. 
 
 job = sys.argv[2]
 
-os.system('sbatch --nodes=1 --time=00:30:00 --ntasks=128 ' + job)
-
-output128 = subprocess.check_output("cat /etc/services", shell=True)
-job_id128 = output128.split()[-1]
-print("Your job id is " + str(job_id128))
-
-os.system('sbatch --nodes=1 --time=00:59:00 --ntasks=64 ' + job)
-
-output64 = subprocess.check_output("cat /etc/services", shell=True)
-job_id64 = output64.split()[-1]
-print("Your job id is " + str(job_id64))
-
-os.system('sbatch --nodes=1 --time=00:59:00 --ntasks=32 ' + job)
-
-output32 = subprocess.check_output("cat /etc/services", shell=True)
-job_id32 = output32.split()[-1]
-print("Your job id is " + str(job_id32))
-
-os.system('sbatch --nodes=1 --time=00:59:00 --ntasks=16 ' + job)
-
-output16 = subprocess.check_output("cat /etc/services", shell=True)
-job_id16 = output16.split()[-1]
-print("Your job id is " + str(job_id16))
-#print(mdp_files)
+command = 'sbatch --nodes=1 --time=00:30:00 --ntasks=64 ' + job
+result = subprocess.check_output(command, shell=True)
+print(str(result))
