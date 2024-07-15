@@ -2,6 +2,8 @@ import os
 import subprocess
 import glob
 
+# parameters: [1] Directory to original input files, [2] job file
+
 # Given directory aggregate all mdp file paths into an array
 
 directory = '/home/x-nkodkani/gromacs-files'
@@ -63,14 +65,17 @@ for file_path in mdp_files:
                 file.write(line)
     print("Successfully updated " + new_file)
 
-# Start batch scripts. 
+
+# Start batchscripts. 
+
 job = 'gromacsjob.sh'
-os.system('sbatch --time=00:30:00 --ntasks=128 ' + job)
 
-os.system('sbatch --time=00:59:00 --ntasks=64 ' + job)
+os.system('sbatch --nodes=1 --time=00:30:00 --ntasks=128 ' + job)
 
-os.system('sbatch --time=00:59:00 --ntasks=32 ' + job)
+os.system('sbatch --nodes=1 --time=00:59:00 --ntasks=64 ' + job)
 
-os.system('sbatch --time=00:59:00 --ntasks=16 ' + job)
+os.system('sbatch --nodes=1 --time=00:59:00 --ntasks=32 ' + job)
+
+os.system('sbatch --nodes=1 --time=00:59:00 --ntasks=16 ' + job)
 
 #print(mdp_files)
