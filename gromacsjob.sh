@@ -1,10 +1,10 @@
 #!/bin/bash
 # FILENAME:  gromacsjob
 
-#SBATCH -A myallocation # Allocation name (run 'mybalance' command to find) 
+#SBATCH -A cis220051 # Allocation name (run 'mybalance' command to find) 
 #SBATCH -p shared    #Queue (partition) name
 #SBATCH --nodes=1 # Total # of nodes 
-#SBATCH --ntasks=128 # Total # of MPI tasks 
+#SBATCH --ntasks=32 # Total # of MPI tasks 
 #SBATCH --time=0:20:00 # Total run time limit (hh:mm:ss) 
 #SBATCH --job-name myjob # Job name 
 #SBATCH -o myjob.o%j    # Name of stdout output file
@@ -26,10 +26,10 @@ mpirun -np 1 gmx_mpi solvate -cp 1AKI_newbox.gro -cs spc216.gro -o 1AKI_solv.gro
 mpirun -np 1 gmx_mpi grompp -f ions.mdp -c 1AKI_solv.gro -p topol.top -o ions.tpr
 echo "13" | mpirun -np 1 gmx_mpi genion -s ions.tpr -o 1AKI_solv_ions.gro -p topol.top -pname NA -nname CL -neutral
 mpirun -np 1 gmx_mpi grompp -f minim.mdp -c 1AKI_solv_ions.gro -p topol.top -o em.tpr
-mpirun gmx_mpi mdrun -deffnm em
+mpirun gmx_mpi mdrun -v -deffnm em
 mpirun -np 1 gmx_mpi grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr
-mpirun gmx_mpi mdrun -deffnm nvt
+mpirun gmx_mpi mdrun -v -deffnm nvt
 mpirun -np 1 gmx_mpi grompp -f npt.mdp -c nvt.gro -r nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
-mpirun gmx_mpi mdrun -deffnm npt
+mpirun gmx_mpi mdrun -v -deffnm npt
 mpirun -np 1 gmx_mpi grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -o md_0_1.tpr
-mpirun gmx_mpi mdrun -deffnm md_0_1
+mpirun gmx_mpi mdrun -v -deffnm md_0_1
