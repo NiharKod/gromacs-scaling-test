@@ -82,15 +82,11 @@ commands.append('sbatch --nodes=1 --time=00:30:00 --ntasks=32 ' + job)
 commands.append('sbatch --nodes=1 --time=00:30:00 --ntasks=16 ' + job)
 
 job_id = []
-#store job id
+#Start jobs and store ID
+
 job_id.append(subprocess.check_output(commands[0], shell=True).decode('utf-8').split()[-1])
 print(job_id[0])
-job_id.append(subprocess.check_output(commands[1], shell=True).decode('utf-8').split()[-1])
-print(job_id[1])
-job_id.append(subprocess.check_output(commands[2], shell=True).decode('utf-8').split()[-1])
-print(job_id[2])
-job_id.append(subprocess.check_output(commands[3], shell=True).decode('utf-8').split()[-1])
-print(job_id[3])
+
 
 data = [{},{},{},{}]
 
@@ -108,10 +104,15 @@ while job_status128.splitlines()[7].split(': ')[1] != 'COMPLETED':
 
 lines = job_status128.splitlines()
 for line in lines: 
-    line = line.split(':')
+    line = line.split(': ')
     data[0][line[0].strip()] = line[1].strip()
-    
+print("Completed 128 core test")
+
 #64 cores
+job_id.append(subprocess.check_output(commands[1], shell=True).decode('utf-8').split()[-1])
+print(job_id[1])
+
+time.sleep(5)
 
 job_status64 = subprocess.check_output('jobinfo ' + job_id[1], shell=True).decode('utf-8')
 
@@ -121,11 +122,14 @@ while job_status64.splitlines()[7].split(': ')[1] != 'COMPLETED':
 
 lines = job_status64.splitlines()
 for line in lines: 
-    line = line.split(':')
+    line = line.split(': ')
     data[1][line[0].strip()] = line[1].strip()
-    
-#32 cores
+print("Completed 64 core test")
 
+#32 cores
+job_id.append(subprocess.check_output(commands[2], shell=True).decode('utf-8').split()[-1])
+print(job_id[2])
+time.sleep(5)
 job_status32 = subprocess.check_output('jobinfo ' + job_id[2], shell=True).decode('utf-8')
 
 while job_status32.splitlines()[7].split(': ')[1] != 'COMPLETED':
@@ -134,27 +138,29 @@ while job_status32.splitlines()[7].split(': ')[1] != 'COMPLETED':
 
 lines = job_status32.splitlines()
 for line in lines: 
-    line = line.split(':')
+    line = line.split(': ')
     data[2][line[0].strip()] = line[1].strip()
+print("Completed 32 core test")
+
 
 #16 cores
 
+job_id.append(subprocess.check_output(commands[3], shell=True).decode('utf-8').split()[-1])
+print(job_id[3])
+time.sleep(5)
 job_status16 = subprocess.check_output('jobinfo ' + job_id[3], shell=True).decode('utf-8')
-
 while job_status16.splitlines()[7].split(': ')[1] != 'COMPLETED':
     time.sleep(0.5)
     job_status16 = subprocess.check_output('jobinfo ' + job_id[3], shell=True).decode('utf-8')
 
 lines = job_status16.splitlines()
 for line in lines: 
-    line = line.split(':')
+    line = line.split(': ')
     data[3][line[0].strip()] = line[1].strip()
-    
-print(data[0]['Used walltime'])
-print(data[1]['Used walltime'])
-print(data[2]['Used walltime'])
-print(data[2]['Used walltime'])
+print("Completed 16 core test")
 
 
-
-
+print("128 Used wall: " + data[0]['Used walltime'])
+print("64 Used wall: " + data[1]['Used walltime'])
+print("32 Used wall: " + data[2]['Used walltime'])
+print("16 Used wall: " + data[2]['Used walltime'])
