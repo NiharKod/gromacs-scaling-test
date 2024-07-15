@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import time
 import glob
 
 # parameters: [1] Directory to original input files, [2] job file
@@ -73,7 +74,37 @@ os.chdir(new_directory_path)
 # Start batchscripts. 
 
 job = sys.argv[2]
+commands = []
+commands.append('sbatch --nodes=1 --time=00:30:00 --ntasks=128 ' + job)
+commands.append('sbatch --nodes=1 --time=00:30:00 --ntasks=64 ' + job)
+commands.append('sbatch --nodes=1 --time=00:30:00 --ntasks=32 ' + job)
+commands.append('sbatch --nodes=1 --time=00:30:00 --ntasks=16 ' + job)
 
-command = 'sbatch --nodes=1 --time=00:30:00 --ntasks=64 ' + job
-result = subprocess.check_output(command, shell=True)
-print(str(result))
+job_id = []
+
+job_id.append(subprocess.check_output(commands[0], shell=True).decode('utf-8').split()[-1])
+print(job_id[0])
+job_id.append(subprocess.check_output(commands[1], shell=True).decode('utf-8').split()[-1])
+print(job_id[1])
+job_id.append(subprocess.check_output(commands[2], shell=True).decode('utf-8').split()[-1])
+print(job_id[2])
+job_id.append(subprocess.check_output(commands[3], shell=True).decode('utf-8').split()[-1])
+print(job_id[2])
+time.sleep(5)
+
+
+job_status = subprocess.check_output('jobinfo ' + job_id[0], shell=True).decode('utf-8')
+
+while job_status.splitlines()[7].split(': ')[1] != 'COMPLETED':
+    time.sleep(1)
+    job_status = subprocess.check_output('jobinfo ' + job_id[0], shell=True).decode('utf-8')
+
+my_dict = {}
+
+lines = job_status.splitlines()
+for line in lines: 
+    line = line.split(':')
+    my_dict[line[0].strip()] = line[1].strip()
+print(my_dict)
+
+
