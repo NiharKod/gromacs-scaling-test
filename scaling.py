@@ -65,8 +65,7 @@ for file_path in mdp_files:
 
 # Start batch scripts. 
 job = 'gromacsjob.sh'
-os.system('sbatch --time=00:59:00 --ntasks=128 ' + job)
-
+os.system('sbatch --time=00:30:00 --ntasks=128 ' + job)
 
 os.system('sbatch --time=00:59:00 --ntasks=64 ' + job)
 
